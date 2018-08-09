@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.css">
+          <!-- Angular Material requires Angular.js Libraries -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-aria.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-messages.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+        <!-- Angular Material Library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://code.highcharts.com/stock/highstock.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+        <script src ="https://code.highcharts.com/modules/exporting.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    </head>
+    <body>     
+        
+        <div id="container"></div>
+               
+        <script language="javascript">    
+            
+            function showGraph(company, todo) {
+                switch (todo)
+                {
+                case 'Price':
+                        document.getElementById("container").innerHTML = "  Price Chart is loading...";
+                  showGraphPrice(company);
+                  break;
+                case 'SMA':
+                        document.getElementById("container").innerHTML = "  SMA Chart is loading...";
+                  showGraphSMA(company);
+                  break;
+                case 'EMA':
+                        document.getElementById("container").innerHTML = "  EMA Chart is loading...";
+                  showGraphEMA(company);
+                  break;
+                case 'MACD':
+                        document.getElementById("container").innerHTML = "  MACD Chart is loading...";
+                  showGraphMACD(company);
+                  break;
+                case 'RSI':
+                        document.getElementById("container").innerHTML = "  RSI Chart is loading...";
+                  showGraphRSI(company);
+                  break;
+                case 'ADX':
+                        document.getElementById("container").innerHTML = "  ADX Chart is loading...";
+                  showGraphADX(company);
+                  break;
+                case 'CCI':
+                        document.getElementById("container").innerHTML = "  CCI Chart is loading...";
+                  showGraphCCI(company);
+                  break;
+                case 'HS':
+                   document.getElementById("container").innerHTML = "  Historical Chart is loading...";
+                  showHighStock(company);
+                  break;
+                }     
+            }
+            
+            function showGraphPrice(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'price'},
+                    success: function(priceResponse, status, xhr){
+                        priceJSON = priceResponse;
+                        Highcharts.chart('container', {
+                            chart: {    type: 'area',
+                                        zoomType: 'x',
+                                    borderWidth:0
+                                    },
+                            title: {    text: priceJSON['title']},
+                            xAxis: {    categories: priceJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                            yAxis: [
+                                        {
+                                            title: {    text: 'Stock Price',
+                                                        style: {fontSize: '10px'}
+                                                    },
+                                            tickAmount:8,
+                                            labels: {style: {fontSize:'8px'}}   
+                                        },
+                                        { 
+                                            opposite: true,
+                                            title: { text: 'Volume',
+                                                    },                  
+                                            labels: {style: {fontSize:'8px'}}   
+                                        }
+                                   ],
+                            legend: {
+                                        itemStyle: { fontSize: '10px'}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            series: [
+                                        {   name: priceJSON['symbol'],
+                                            data: priceJSON['priceArr'],
+                                            marker: {enabled: false},
+                                            color: '#1127f8',
+                                            fillOpacity: 0.3,
+                                            lineWidth: 2,
+                                            tooltip:{valueDecimals: 2}
+                                        },
+                                        {   name: priceJSON['symbol'] + ' Volume',
+                                            type: 'column',
+                                            yAxis: 1,
+                                            data: priceJSON['volumeArr'],
+                                            color: '#e82319',
+                                            borderWidth: 0.2,
+                                            borderColor: 'black',
+                                            lineWidth:1,
+                                            tooltip:{valueDecimals: 0}
+                                        }
+                                    ]
+                        }); 
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {      
+                    document.getElementById("container").innerHTML = "  Chart loading failed.";
+                    }
+                }); 
+             }
+            
+            function showGraphSMA(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'SMA'},
+                    success: function(smaResponse, status, xhr){
+                        smaJSON = smaResponse;
+                        Highcharts.chart('container', {
+                            chart: {   
+                                        zoomType: 'x'
+                                    },
+                            title: {text: smaJSON['SMAindTitle']},
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                            xAxis: {    categories: smaJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            yAxis: {title: {text: 'SMA'}},
+                            legend: {itemStyle: { fontSize: '10px'}},
+                            series: [{  name: smaJSON['Symbol'],
+                                        data: smaJSON['SMAvalue']
+                                    }]
+                        });
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) { 
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+                    }
+                });
+            }
+            
+            function showGraphEMA(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'EMA'},
+                    success: function(emaResponse, status, xhr){
+                        emaJSON = emaResponse;
+                        Highcharts.chart('container', {
+                            chart: {   
+                                        zoomType: 'x',
+                                    },
+                            title: {text: emaJSON['EMAindTitle']},
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                            xAxis: {    categories: emaJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            yAxis: {title: {text: 'MEA'}},
+                            legend: {itemStyle: { fontSize: '10px'}},
+                            series: [{  name: emaJSON['Symbol'],
+                                        data: emaJSON['EMAvalue'],
+                                    }]
+                        });
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {  
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+                    }
+                });
+            }
+
+            function showGraphRSI(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'RSI'},
+                    success: function(rsiResponse, status, xhr){
+                        rsiJSON = rsiResponse;
+                        Highcharts.chart('container', {
+                            chart: {  
+                                        zoomType: 'x',
+                                    },
+                            title: {text: rsiJSON['RSIindTitle']},
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                            xAxis: {    categories: rsiJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            yAxis: {title: {text: 'RSI'}},
+                            legend: {itemStyle: { fontSize: '10px'}},
+                            series: [{  name: rsiJSON['Symbol'],
+                                        data: rsiJSON['RSIvalue']
+                                    }]
+                        });
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {      
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+                    }
+                });
+                
+            }
+            
+            function showGraphADX(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'ADX'},
+                    success: function(adxResponse, status, xhr){
+                        Highcharts.chart('container', {
+                            chart: {   
+                                        zoomType: 'x',
+                                    },
+                            title: {text: adxJSON['ADXindTitle']},
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                            xAxis: {    categories: adxJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            yAxis: {title: {text: 'ADX'}},
+                            legend: {itemStyle: { fontSize: '10px'}},
+                            series: [{  name: adxJSON['Symbol'],
+                                        data: adxJSON['ADXvalue']
+                                    }]
+                        });
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {  
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+                    }
+                });
+
+            }
+            
+            function showGraphCCI(company) {    
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'CCI'},
+                    success: function(cciResponse, status, xhr){
+                        cciJSON = cciResponse;
+                        Highcharts.chart('container', {
+                            chart: {   
+                                        zoomType: 'x',
+                                    },
+                            title: {text: cciJSON['CCIindTitle']},
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                            xAxis: {    categories: cciJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            yAxis: {title: {text: 'CCI'}},
+                            legend: {itemStyle: { fontSize: '10px'}},
+                            series: [{  name: cciJSON['Symbol'],
+                                        data: cciJSON['CCIvalue']
+                                    }]
+                        });
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {      
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+                    }
+                });
+                
+
+            }
+            
+            function showGraphMACD(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'MACD'},
+                    success: function(macdResponse, status, xhr){
+                        macdJSON = macdResponse;
+                        Highcharts.chart('container', {
+                            chart: {  
+                                        zoomType: 'x',
+                                    },
+                            title: { text: macdJSON['MACDindTitle']},
+                            subtitle: { useHTML: true,
+                                        text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                        },
+                             xAxis: {    categories: macdJSON['timeArr'],
+                                        tickInterval: 5,
+                                        labels: {style: { fontSize:'8px'}}
+                                    },
+                            tooltip:{valueDecimals: 2},
+                            yAxis: {title: {text: 'MACD'}},
+                            legend: {itemStyle: { fontSize: '10px'}},
+                            series: [   {   name: macdJSON['Symbol'] + ' MACD_Signal',
+                                            data: macdJSON['MACDvalueSig']
+                                        },
+                                        {   name: macdJSON['Symbol'] + ' MACD_Hist',
+                                            data: macdJSON['MACDvalueHist']
+                                        },
+                                        {   name: macdJSON['Symbol'] + ' MACD',
+                                            data: macdJSON['MACDvalueMacd']
+                                        }]         
+                            }); 
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {  
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+
+                    }
+                });
+ 
+                
+            }
+            
+            function showHighStock(company) {
+                $.ajax({
+                    async : true,
+                    url : 'http://10.0.2.2:9090/',
+                    type : 'GET',
+                    dataType : 'JSON', 
+                    data : {'symbol': company, 'todo':'highStock'},
+                    success: function(highStockResponse, status, xhr){
+                        highStockJSON = highStockResponse;
+                        Highcharts.stockChart('container', 
+                            {
+                            rangeSelector: {
+                              buttons:[
+                                  {
+                                      type: 'week',
+                                      count: 1,
+                                      text: '1w'
+                                  },
+                                  {
+                                      type: 'month',
+                                      count: 1,
+                                      text: '1m'
+                                  },
+                                  {
+                                      type: 'month',
+                                      count: 3,
+                                      text: '3m'
+                                  },
+                                  {
+                                      type: 'month',
+                                      count: 6,
+                                      text: '6m'  
+
+                                  },
+                                  {
+                                      type: 'ytd',
+                                      text: 'YTD'
+                                  },
+                                  {
+                                      type: 'year',
+                                      count: 1,
+                                      text: '1y'
+                                  },
+                                  {
+                                      type: 'all',
+                                      text: 'All'
+                                  },
+
+                              ],
+                                 selected: 0,
+                            },
+                                chart: {height: 400,
+                                        zoomType: 'x'
+                                       },
+                                title: {text: highStockJSON['title']},
+                               subtitle: { useHTML: true,
+                                            text: '<a class = "subt" href="https://www.alphavantage.co" target="_blank">Source: Alpha Vantage</a>'
+                                            },
+                            tooltip: {
+                                split: false,
+                                xDataFormat: '%A, %b, %e, %Y'
+                            },
+                                yAxis: { title: {text: 'Stock Value'} },
+                                series: [{
+                                            name: highStockJSON['Symbol'] + ' Stock Price',
+                                            data: highStockJSON["Arr"],
+                                            type: 'area',
+                                            threshold: null,
+                                            tooltip: {
+                                                shared: true,
+                                                valueDecimals: 2,  
+                                                     }
+                                        }],
+                                responsive: {
+                                                rules: [{
+                                                            condition: {maxWidth: 768},
+                                                            chartOptions: {
+        //                                                                    chart: {height: 300},
+                                                                            rangeSelector: {
+                                                                                  buttons:[
+                                                                                      {
+                                                                                          type: 'month',
+                                                                                          count: 1,
+                                                                                          text: '1m'
+                                                                                      },
+                                                                                      {
+                                                                                          type: 'month',
+                                                                                          count: 3,
+                                                                                          text: '3m'
+                                                                                      },
+                                                                                      {
+                                                                                          type: 'month',
+                                                                                          count: 6,
+                                                                                          text: '6m'  
+
+                                                                                      },
+                                                                                      {
+                                                                                          type: 'year',
+                                                                                          count: 1,
+                                                                                          text: '1y'
+                                                                                      },
+                                                                                      {
+                                                                                          type: 'all',
+                                                                                          text: 'All'
+                                                                                      },
+
+                                                                                  ],
+                                                                                     selected: 0
+                                                                                }
+
+                                                                        }
+                                                        }]
+                                            }
+                            }); 
+                    },
+                    error:function (XMLHttpRequest, textStatus, errorThrown) {     
+                        document.getElementById("container").innerHTML = "  Chart loading failed.";
+
+                    }
+                });
+            }
+
+        </script>
+        
+    </body>
+    
+</html>

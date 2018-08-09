@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+   >
+    <!--android:fillViewport="true"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/linerLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible"
+        tools:context="com.example.joseph.hw9.TabActivity$PlaceholderFragment"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/stockTool"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/stockDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/spinner"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="5sp"
+                android:layout_toEndOf="@+id/hcWebView"
+                android:text="Stock Details"
+                android:textColor="#000000"
+                android:textSize="30sp" />
+
+            <!--<Button-->
+            <!--android:id="@+id/fb"-->
+            <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+            <!--android:layout_width="8dp"-->
+            <!--android:layout_height="33dp"-->
+            <!--android:layout_marginBottom="15sp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/facebook"-->
+            <!--android:scaleType="fitCenter" />-->
+
+            <ImageButton
+                android:id="@+id/fb"
+                android:layout_width="73dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/facebook" />
+
+            <ImageButton
+                android:id="@+id/filled"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="50sp"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:scaleType="fitStart"
+                android:visibility="visible"
+                app:srcCompat="@drawable/filled" />
+
+            <ImageButton
+                android:id="@+id/empty"
+                android:layout_width="40sp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="50sp"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:scaleType="fitStart"
+                android:visibility="gone"
+                app:srcCompat="@drawable/empty" />
+
+            <!--<Button-->
+            <!--android:id="@+id/empty"-->
+            <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+            <!--android:layout_width="8dp"-->
+            <!--android:layout_height="33dp"-->
+            <!--android:layout_marginBottom="15sp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/empty"-->
+            <!--android:visibility="visible" />-->
+
+            <!--<Button-->
+            <!--android:id="@+id/filled"-->
+            <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+            <!--android:layout_width="8sp"-->
+            <!--android:layout_height="33sp"-->
+            <!--android:layout_marginBottom="15sp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/filled"-->
+            <!--android:visibility="gone" />-->
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="90sp"
+            android:layout_marginBottom="130sp"
+            android:layout_marginTop="130sp" />
+
+
+        <TextView
+            android:id="@+id/fail"
+            android:layout_width="match_parent"
+            android:layout_height="340sp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Failed to load data."
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:visibility="visible" />
+
+        <ListView
+            android:id="@+id/detailsListView"
+            android:layout_width="match_parent"
+            android:layout_height="340sp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:visibility="visible"></ListView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55sp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/indicators"
+                android:layout_width="150sp"
+                android:layout_height="50sp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="118dp"
+                android:layout_marginLeft="10sp"
+                android:layout_toEndOf="@+id/detailsListView"
+                android:text="Indicators"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="100sp"
+                android:layout_height="50sp"
+                android:layout_alignBaseline="@+id/indicators"
+                android:layout_alignBottom="@+id/indicators"
+                android:layout_centerHorizontal="true"
+                android:entries="@array/indicators_spinner" />
+
+            <Button
+                android:id="@+id/changeButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:layout_alignBottom="@+id/spinner"
+                android:layout_marginStart="13dp"
+                android:layout_toEndOf="@+id/spinner"
+                android:text="Change"
+                android:textAllCaps="false"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/hcWebView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100sp"
+            android:layout_marginTop="10sp" />
+
+    </LinearLayout>
+</ScrollView>
